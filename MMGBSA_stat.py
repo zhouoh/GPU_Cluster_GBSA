@@ -27,8 +27,15 @@ def write_recomannd_GBSA_input(f):
     f.write('&gb\n')
     f.write('igb=1, saltcon=0.150,\n')
     f.write('/\n')
+
+
+def write_recomannd_PBSA_input(f):
+    f.write('&general\n')
+    f.write('startframe=1, endframe=100, interval=1,\n') 
+    f.write('verbose=2, keep_files=0,\n')
+    f.write('/\n')
     f.write('&pb\n')
-    f.write('istrng=0.15, fillratio=4.0, indi=4.0, \n')
+    f.write('istrng=0.15, fillratio=4.0, indi=1.0, \n')
     f.write('/\n')
 
 def write_QMMM_GBSA_input(f,qm_residue,charge):
@@ -114,6 +121,15 @@ def run_recommand_MMGBSA(replica_dir):
     with open('_MMPBSA_gb.mdin', 'w') as f:
         f.write(content)
     os.system(f'MMPBSA.py -O -i gbsa.in -o gbsa_2.out -sp {prmtop_raw} -cp ../com.parm -rp ../rec.parm -lp ../lig.parm -y prod.nc -use-mdins > gbsa_2.log')
+    with open("gbsa.in","w") as f:
+        write_recomannd_PBSA_input(f)
+    os.system(f'MMPBSA.py -O -i gbsa.in -o gbsa_2p.out -sp {prmtop_raw} -cp ../com.parm -rp ../rec.parm -lp ../lig.parm -y prod.nc > gbsa_2p.log')
+    #combine the results
+    with open('gbsa_2p.out', 'r') as f:
+        content = f.read()
+        with open('gbsa_2.out', 'a') as f2:
+            f2.write("\n")
+            f2.write(content)
     os.chdir('..')
 
 def get_resid(index_l,cutoff):
@@ -190,15 +206,18 @@ def extract_GBSA_results(replica_list,method):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run and Extract MMGBSA results')
     parser.add_argument('--index_l', type=str, help='index of the ligand',default="282")
-    parser.add_argument('-N', '--num_cpu', type=int, help='number of CPU', default=4)
+    parser.add_argument('-N', '--num_cpu', type=int, help='number of CPU', default=12138)
     parser.add_argument('-o', '--output', type=str, help='output file', default='GBSA_result.dat')
     parser.add_argument('-c','--cutoff', type=float, help='cutoff for QM region', default=2.5)
     parser.add_argument('-r','--residue', type=str, help='residue for QM region', default="12138")
-    parser.add_argument('-m','--method', type=int, help='method for GB(PB) calculation\n1. normal GB(HCT) and PB (epsilon=4.0)\n2. GB(epsilon=4.0) and PB (epsilon=4.0)\n 3. QM/MM-GBSA using PM6', default=1)
+    parser.add_argument('-m','--method', type=int, help='method for GB(PB) calculation\n1. normal GB(HCT) and PB (epsilon=4.0)\n2. GB(epsilon=4.0) and PB (epsilon=1.0)\n 3. QM/MM-GBSA using PM6', default=1)
     parser.add_argument('-O','--overwrite', action='store_true', help='overwrite the existing output file', default=False)
 
 
     args = parser.parse_args()
+    if args.num_cpu == 12138:
+        args.num_cpu = os.cpu_count()/2
+        print(f'Using {args.num_cpu} cores')
     #Throw a warning if too many cores are used
     if args.num_cpu > os.cpu_count()/2:
         print(f"Warning: using more than {os.cpu_count()/2} cores may cause the system to crash")
@@ -206,7 +225,7 @@ if __name__ == "__main__":
     IF_OVERWRITE = args.overwrite
 
     replica_list = get_dirs()
-    #prepare_prm(args.index_l)
+    prepare_prm(args.index_l)
     #Open a pool of workers
     from multiprocessing import Pool
     if args.method == 1:
