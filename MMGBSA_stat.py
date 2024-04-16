@@ -12,7 +12,7 @@ def write_GBSA_input(f):
     f.write('startframe=1, endframe=100, interval=1,\n') 
     f.write('verbose=2, keep_files=0,\n')
     f.write('/\n')
-    f.write('&gb\n')
+    f.write('&gb\n') 
     f.write('igb=1, saltcon=0.150,\n')
     f.write('/\n')
     f.write('&pb\n')
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     #Throw a warning if too many cores are used
     if args.num_cpu > os.cpu_count()/2:
         print(f"Warning: using more than {os.cpu_count()/2} cores may cause the system to crash")
-    
+    args.num_cpu = int(args.num_cpu)
     IF_OVERWRITE = args.overwrite
 
     replica_list = get_dirs()
