@@ -221,7 +221,7 @@ if __name__ == "__main__":
     #Throw a warning if too many cores are used
     if args.num_cpu > os.cpu_count()/2:
         print(f"Warning: using more than {os.cpu_count()/2} cores may cause the system to crash")
-    args.num_cpu = int(args.num_cpu)
+    args.num_cpu = int(args.num_cpu) 
     IF_OVERWRITE = args.overwrite
 
     replica_list = get_dirs()
