@@ -5,7 +5,9 @@ import argparse
 import numpy as np
 import base64
 
-IN_base64 = "/Td6WFoAAATm1rRGAgAhARYAAAB0L+Wj4E//AyRdADKcQiFazHbptEya0uKdmUo0mBgwrstdAmMYQ1xkaobm9GDzI481Xf/ikhJG+1nx8iQDfR3lo1QCENSfMS41I+ztkyTT4hVZkiTZzdTvit+QvhcdSpYlOXxHbbHFfYL2SNsvOoU/yKcykz/6cW/6/XVLVnKpc/PJophMO7BQYv1hmUxZlFPbh1ukjFgD9qkyh8+zl9DAltD1hJy5Gi2YFvSOPvRGd+Wp5g1N+3os+aDSZBxR6OVHs+NYAys81bcPkBd3xYZh1zrGWWdnpT4liFg8xhlcu9sr4Uzfg53D/Fbtp9vN4w+z0SK/QF+tK17eydJxcehZ8egTv/uxaT2pmMWFXPaFM9mXLUebtznSFQPnvy7nXAjxB84yMM19I367qx7qg9s99xrVCjSrre9napRFZmfNaka7bajW+29YpMtadD92oJQWG3O9HLNOSBVw+9Pj/t0+hIK6fwLVrGrZC4Am7qDEiG/yt/GMUGigowy5y9W7z1aaFc6od6CSxDJ+wApQUuJdrCS+o7WEdm8uiMfSMd45+E7nFUuIiqHWQY8O7WOwVXJvtQlhGPt6SsXVT1bKAfTI1G3NRishTIr/f+6XQP0IAi0u9Dx4yXwc38ant0m7OoGTz6pH2osq+BykSnpLpwVL8roZqkb5Oy7DBD6M6rVvmforaefK27gFri1LVcKTffi0LRVR2XOWp3uE/Rw4xOS2jKqTJlGlUqUM6mr4B0cY+kUtDY0MpAcmMkCu5Bl7/+P5YN2fyaD7oUEqtYOTgU4NXnTCDbc9kTn88WPZxDOHUFpj7hmUiqC2IMNuSgoZpyAG8a/XkyKTeQzNyorwHyJbhYPGFq1J1W2ctXg7xLE78SBrz4r3Gt86iHv01KqSrjyylFdzi032zerJTPvTQtNfJMDFRvSCRPbM/OHypPCdtbU0tR8e6jD6pvaZ6/3/YT9d3oQn88IXPbeIRyFdOrb03C+7DyO8fWznMRXvgoSM4pCBzVnE1R+exRXsl/V80/TmPnxYJcR7Sy6X7Xh2XadRMjP/yd2bPCdaLXTRBgWZbNAcDA78AfPBuA4vAo87nQAX0Um/vShpwQABwAaAoAEA0+XHcLHEZ/sCAAAAAARZWg=="
+IN_base64 = "H4sIABO2K2YAA+2bQW+bMBiGc+6v8C7NhXa2A2SqFKlTV2mXVT1Ek6YqqmhCE2tgKJglq/bjZ0OSAiFAooYQ9Xt7iN28mA9qP59Njf1CLhnvHFRYytR19UmIbqQ/lYjepx1Z7+s6oUT5CDGI3kH4sGElikJhBQh1Xmde5M22+6q+P1FRHiL7JWIOewoswTyOGEd390NkCTRj0xkK7FAEFuMCKZ2h8zEXgYNq6gwh5soWERogrCGmWpNFoiEuFrJgaBt+LsYo9lNlek4KJe2PI5H4v1zi7cZ0+0t/T0NTy3WtR4erSAqPln5huz6L/Rgrj6rjVH2z/adU/H5ytU9W4MmOJpJfCyvyB/EJpd+X9yRuj9SLn80Dy0dJs5VS/ilK4rmocYDye5F4duu3z0PhsNifDGcNTdRlynuDN/9w8f3xgzgeasRuLuaLTC14qyX+IIlfxrPujI9zEf8F8rdM+tce1wp/S1P3ilw8MD6xF6PrG+3mq3b37yqpPzqj80/X3wddLT7yc/Xlps907JH7PrJfaMv4TxP+94D/TaiM/443z+Ef+A/8z/uPyH98WdB/gP+7aGZb4tArgCr+90me/xRT4H8jMrAfItUJGJ/G6P85LB/v78J/vOJ/njFt5n+W/sYm/FGW/3X53FaeGzmaFx2f53kG5xmaa2/+3ebz3A08X9SPvyn+o3MZ8/DX/e2gO7z9cY9lKywUtk8GeFmig+UtTPx/LCey5bfqGuOy+l5VCk+cbv/27lu3Krw985Ea+odeAezFf3j+04iOw/+TnP8b2QRACqb/wH/gfxX/jXQCWHaiglM3yP9eG/lvAP+bEPC/Nv9J7vkPKVgCAP+B/xX8X3ajVQLYtgRokP96G/lvAv+bEPC/Pv9zCwBa8fwf+A/8L+J/ZgFAty0AGuS/0Ub+94H/TQj4X5v/NDf/pzD/B/7vzn+amf/TFsz/zRbyv4eB/00I+F+f/7n5f9X+H+A/8L+I/5n5f+/I8385OA/+AkAV/6lu5vd/mibM/xsR40wwy0GyH0hQvyZbQEt7/d78J/X2/7jWYvx3vOSP9CWVN4Tk/et8QVb5ogQUe+WLE+f5is9pPKfpnL6z5Xw2NjJeKW8lX7uFMX7QvZZtlBycB38BoJL/xsb+f9OE//82IuB/VfzA/zX/adF6B/bbn7L8wJscm/89WSa6KfOAYRKzp/jf78P+z0ZEMOYhUr0gGqdf/9rKk4/7/Cfz/lfx459Mvvho7389ODafitmo7AWwdD56mIzW+WhVDlbl3fPDGdr6c+xBBgKBQCAQCAQCgUAg0JH1H45e1QcAUAAA"
+IF_RESTART = False
+LENGTH = 5.0
 
 def write_submission_script_body(f):
     f.write(f'/usr/local/amber22/bin/pmemd.cuda -O -i min1.in  -o min1.out   -p *prmtop -c *.inpcrd -r min1.rst   -x min1.nc   -ref *.inpcrd\n')
@@ -20,6 +22,9 @@ def write_submission_script_body(f):
     f.write(f'/usr/local/amber22/bin/pmemd.cuda -O -i eq2.in  -o eq2.out   -p *prmtop -c eq1.rst  -r eq2.rst   -x eq2.nc   -ref eq1.rst\n')
     f.write(f'/usr/local/amber22/bin/pmemd.cuda -O -i prod.in -o prod.out -p *prmtop -c eq2.rst  -r prod.rst -x prod.nc\n')
     #f.write('#### submit_job.sh END ####\n')
+
+def write_submission_script_body_restart(f):
+    f.write(f'/usr/local/amber22/bin/pmemd.cuda -O -i prod.in -o prod.out -p *prmtop -c eq2.rst  -r prod.rst -x prod.nc\n')
 
 def write_submission_script_header(f,name,gpu):
     f.write('#### submit_job.sh START ####\n')
@@ -65,6 +70,11 @@ def make_work_dir(name,num_gpu,num_replica,index,index_l):
         os.system(f'cp *.prmtop {dir_name}')
         os.system(f'cp *.inpcrd {dir_name}')
         os.chdir(dir_name)
+        if IF_RESTART:
+            #chek if restart files exist
+            if not os.path.exists('eq2.rst'):
+                print(f'Error: restart files not found in {dir_name}')
+                sys.exit(1)
         #write input files
         with open("in.tar.xz", "wb") as f:
             f.write(base64.b64decode(IN_base64))
@@ -83,7 +93,10 @@ def write_submission_script(name,replica,gpu):
             write_submission_script_header(f,f'{name}_gpu_{gpu_id}',gpu)
             for dir_name in replica[gpu_id]:
                 f.write(f'cd {dir_name}\n')
-                write_submission_script_body(f)
+                if IF_RESTART:
+                    write_submission_script_body_restart(f)
+                else: 
+                    write_submission_script_body(f)
                 f.write(f'cd ..\n')
             f.write('#### submit_job.sh END ####\n')
         os.system(f'chmod +x submit_job_gpu_{gpu_id}.sh')
@@ -103,6 +116,18 @@ def modifiy_input(index,index_l):
         content = content.replace("[index_l]",index_l)
         with open(i,'w') as f:
             f.write(content)
+    with open('prod.in','r') as f:
+        content = f.read()
+    #convert ns to steps
+    length = LENGTH
+    length = int(float(length) * 500000)
+    d = int(length / 100)
+    length = str(length)
+    d = str(d)
+    content = content.replace("[length]",length)
+    content = content.replace("[d]",d)
+    with open('prod.in','w') as f:
+        f.write(content)
 
 
 if __name__ == "__main__":
@@ -114,7 +139,11 @@ if __name__ == "__main__":
     parser.add_argument('--index', type=str, help='index of the last protein residue', default='281')
     parser.add_argument('--index_l', type=str, help='index of the ligand', default='282')
     parser.add_argument('--submit', type=bool, help='If submit', default=False)
+    parser.add_argument('--restart', action='store_true', help='If restart')
+    parser.add_argument('--length', type=float, help='Length of the simulation in ns', default=5.0)
     args = parser.parse_args()
+    IF_RESTART = args.restart
+    LENGTH = args.length
     replica = make_work_dir(args.name,args.num_gpu,args.num_replica,args.index,args.index_l)
     submission_list = write_submission_script(args.name,replica,args.gpu)
     if args.submit:
